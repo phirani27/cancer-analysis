@@ -20,6 +20,9 @@
             position: relative;
             z-index: 1;
         }
+        .rp-dropdown li{
+            text-align: left;
+        }
     </style>
 
   </head>
@@ -68,7 +71,52 @@
         <div class="row">
             <!-- Scatter Chart -->
             <div class="col-sm">
-                One of three columns
+                <div class="rp-dropdown">
+                    <select class="scatter-dropdown" id="scatter1">
+                        <option selected value="radius_se">radius_mean</option>
+                        <option value="perimeter_se">perimeter_mean</option>
+                        <option value="texture_se">texture_mean</option>
+                        <option value="area_se">area_mean</option>
+                        <option value="smoothness_se">smoothness_mean</option>
+                        <option value="compactness_se">compactness_mean</option>
+                        <option value="concavity_se">concavity_mean</option>
+                        <option value="concave points_se">concave points_mean</option>
+                        <option value="symmetry_se">symmetry_mean</option>
+                        <option value="fractal_dimension_se">fractal_dimension_mean</option>
+                        <option value="texture_worst">texture_worst</option>
+                        <option value="perimeter_worst">perimeter_worst</option>
+                        <option value="area_worst">area_worst</option>
+                        <option value="smoothness_worst">smoothness_worst</option>
+                        <option value="compactness_worst">compactness_worst</option>
+                        <option value="concavity_worst">concavity_worst</option>
+                        <option value="concave points_worst">concave points_worst</option>
+                        <option value="symmetry_worst">symmetry_worst</option>
+                        <option value="fractal_dimension_worst">fractal_dimension_worst</option>
+                    </select>
+                    v/s
+                    <select class="scatter-dropdown" id="scatter2">
+                        <option value="radius_se">radius_mean</option>
+                        <option selected value="perimeter_se">perimeter_mean</option>
+                        <option value="texture_se">texture_mean</option>
+                        <option value="area_se">area_mean</option>
+                        <option value="smoothness_se">smoothness_mean</option>
+                        <option value="compactness_se">compactness_mean</option>
+                        <option value="concavity_se">concavity_mean</option>
+                        <option value="concave points_se">concave points_mean</option>
+                        <option value="symmetry_se">symmetry_mean</option>
+                        <option value="fractal_dimension_se">fractal_dimension_mean</option>
+                        <option value="texture_worst">texture_worst</option>
+                        <option value="perimeter_worst">perimeter_worst</option>
+                        <option value="area_worst">area_worst</option>
+                        <option value="smoothness_worst">smoothness_worst</option>
+                        <option value="compactness_worst">compactness_worst</option>
+                        <option value="concavity_worst">concavity_worst</option>
+                        <option value="concave points_worst">concave points_worst</option>
+                        <option value="symmetry_worst">symmetry_worst</option>
+                        <option value="fractal_dimension_worst">fractal_dimension_worst</option>
+                    </select>
+                </div>
+                <div id="scatter-chart"></div>
             </div>
         </div>
         <div class="row">

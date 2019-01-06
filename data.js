@@ -19916,7 +19916,7 @@ const ANALYSIS_DATA = [
     }
   ];
 
-  const DATA_VIOLIN = [
+const DATA_VIOLIN = [
     {
       "": 0,
       "diagnosis": "M",
