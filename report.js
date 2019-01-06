@@ -123,8 +123,7 @@ function makeScatterChart(){
     let yCord = $('#scatter2').val();
     let x = ANALYSIS_DATA.map((attr)=>attr[xCord]);
     let y = ANALYSIS_DATA.map((attr)=>attr[yCord]);
-    console.log(xCord);
-    console.log(yCord);
+    
     var trace1 = {
         x: x,
         y: y,
@@ -190,7 +189,85 @@ function makeScatterChart(){
         }
     };
     Plotly.newPlot('scatter-chart', data, layout);
-};
+}
+
+function makeSplomChart(){
+    
+    let text = ANALYSIS_DATA.map((data)=>{
+        if(data['diagnosis']==="M")
+            return 'Malign';
+        else
+            return 'Benign';
+    });
+    let color = ANALYSIS_DATA.map((data)=>{
+        if(data['diagnosis']==="M")
+            return 1;
+        else
+            return 0;
+    });
+    let featureList = $('#splom-select').multipleSelect('getSelects', 'value');
+
+    var pl_colorscale=[
+        [0.0, '#119dff'],
+        [0.5, '#119dff'],
+        [0.5, '#ef553b'],
+        [1, '#ef553b']
+    ]
+
+    let dimensions = featureList.map((feature)=>{
+        return {label: feature, values: ANALYSIS_DATA.map((data)=>data[feature])};
+    });
+
+    var axis = {
+        showline:false,
+        zeroline:false,
+        gridcolor:'#ffff',
+        ticklen:2,
+        tickfont:{size:10},
+        titlefont:{size:12}
+    };
+
+    var data = [{
+        type: 'splom',
+        dimensions: dimensions,
+        text:text,
+        marker: {
+            color: color,
+            colorscale: pl_colorscale,
+            size: 5,
+            line: {
+                color: 'white',
+                width: 0.5
+            }
+        }
+    }];
+
+    var layout = {
+        title:"",
+        height: 800,
+        margin: 0,
+        width: $("#splom-chart").width(),
+        showlegend: true,
+        legend: {
+            orientation: "h",
+            y: 10
+        },
+        hovermode:'closest',
+        dragmode:'select',
+        plot_bgcolor:'rgba(240,240,240, 0.95)',
+        xaxis:axis,
+        yaxis:axis
+    };
+
+    for(var i=0,len=featureList.length;i<len;i++){
+        layout['xaxis'+i] = axis;
+        layout['yaxis'+i] = axis;
+    }
+
+    console.log(layout);
+
+    Plotly.react('splom-chart', data, layout);  
+}
 
 //select initialization
 $('#violin-select').multipleSelect({
@@ -208,10 +285,22 @@ $('#violin-select').multipleSelect({
 $(".scatter-dropdown").change(function(){
     Plotly.purge('scatter-chart');
     makeScatterChart();    
-}); 
+});
+
+$('#splom-select').multipleSelect({
+    selectAll: true,
+    onClick: function(){
+        Plotly.purge('splom-chart');
+        makeSplomChart();        
+    },
+    onCheckAll: function(){
+        Plotly.purge('splom-chart');
+        makeSplomChart();        
+    }
+});
 
 makeViolinChart();
 
 makeScatterChart();
 
-//makeSplomChart();
+makeSplomChart();
