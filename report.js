@@ -123,7 +123,7 @@ function makeScatterChart(){
     let yCord = $('#scatter2').val();
     let x = ANALYSIS_DATA.map((attr)=>attr[xCord]);
     let y = ANALYSIS_DATA.map((attr)=>attr[yCord]);
-    
+
     var trace1 = {
         x: x,
         y: y,
@@ -264,10 +264,99 @@ function makeSplomChart(){
         layout['yaxis'+i] = axis;
     }
 
-    console.log(layout);
-
     Plotly.react('splom-chart', data, layout);  
 }
+
+function makeHeatMap(){
+
+
+    let featureList = $('#heatMap-select').multipleSelect('getSelects', 'value');
+    let featureObj = {};
+    for(let i=0,len=featureList.length;i<len;i++){
+        featureObj[featureList[i]] = 1;
+    }
+
+    let zObj = {},z=[];
+    for(let i=0,len=DATA_HEAT_MAP.length;i<len;i++){
+        let row = DATA_HEAT_MAP[i];
+        let currVal = row['row'];
+        if(featureObj[currVal]){
+            let currRow = [];
+            for(let i=0,len=featureList.length;i<len;i++){
+                currRow.push(row[featureList[i]]);
+            }
+            zObj[currVal] = currRow;
+        }
+    }
+
+    for(let i=0,len=featureList.length;i<len;i++){
+        z.push(zObj[featureList[i]]);
+    }
+
+    z = z.reverse();
+
+    let colorscaleValue = [
+        [0, '#5C1E51'],
+        [0.25, '#AD1759'],
+        [0.5, '#EC4A3E'],
+        [0.75, '#F6A178'],
+        [1, '#FAEBDD']
+    ];
+
+    var data = [
+        {
+          z: z,
+          x: featureList,
+          y: featureList.reverse(),
+          type: 'heatmap',
+          colorscale: colorscaleValue
+        }
+      ];
+
+      var layout = {
+        title: '',
+        height: 600,
+        width: $("#heatMap-chart").width(),
+        annotations: [],
+        xaxis: {
+          ticks: ''
+        },
+        yaxis: {
+          ticks: '',
+          ticksuffix: ' ',
+          width: 700,
+          height: 700,
+          autosize: false
+        }
+      };
+
+      /** Anotations */
+      for ( var i = 0; i < featureList.length; i++ ) {
+        for ( var j = 0; j < featureList.length; j++ ) {
+            let color = 'white';
+            if(z[i][j] > 0.6){
+                color = 'black';
+            }    
+            var result = {
+            xref: 'x1',
+            yref: 'y1',
+            x: featureList[j],
+            y: featureList[i],
+            text: z[i][j].toFixed(2),
+            font: {
+                family: 'Arial',
+                size: 12,
+                color: color
+            },
+            showarrow: false
+            };
+            layout.annotations.push(result);
+        }
+      }
+      
+      Plotly.newPlot('heatMap-chart', data, layout);
+}
+
 
 //select initialization
 $('#violin-select').multipleSelect({
@@ -299,8 +388,22 @@ $('#splom-select').multipleSelect({
     }
 });
 
+$('#heatMap-select').multipleSelect({
+    selectAll: true,
+    onClick: function(){
+        Plotly.purge('heatMap-chart');
+        makeHeatMap();        
+    },
+    onCheckAll: function(){
+        Plotly.purge('heatMap-chart');
+        makeHeatMap();        
+    }
+});
+
 makeViolinChart();
 
 makeScatterChart();
 
 makeSplomChart();
+
+makeHeatMap();
